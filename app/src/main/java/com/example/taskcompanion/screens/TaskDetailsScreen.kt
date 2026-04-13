@@ -10,7 +10,11 @@ import androidx.navigation.NavController
 // I used AI to assist me in creating the TaskDetails composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskDetailsScreen(navController: NavController) {
+fun TaskDetailsScreen(
+    navController: NavController,
+    title: String,
+    description: String
+) {
 
     Scaffold(
         topBar = {
@@ -29,19 +33,17 @@ fun TaskDetailsScreen(navController: NavController) {
         ) {
 
             Text(
-                text = "Task Title Example",
+                text = title,
                 style = MaterialTheme.typography.titleLarge
             )
 
             Text(
-                text = "This is where the task description will be shown.",
+                text = description,
                 style = MaterialTheme.typography.bodyMedium
             )
 
             Button(
-                onClick = {
-                    navController.popBackStack()
-                },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Back")

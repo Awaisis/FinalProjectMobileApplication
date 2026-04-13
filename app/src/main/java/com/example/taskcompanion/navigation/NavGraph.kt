@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.taskcompanion.screens.HomeScreen
 import com.example.taskcompanion.screens.AddEditTaskScreen
-import com.example.taskcompanion.screens.HomeScreen
 import com.example.taskcompanion.screens.TaskDetailsScreen
 
 @Composable
@@ -27,8 +26,16 @@ fun NavGraph() {
             AddEditTaskScreen(navController)
         }
 
-        composable("details") {
-            TaskDetailsScreen(navController)
+        composable("details/{title}/{description}") { backStackEntry ->
+
+            val title = backStackEntry.arguments?.getString("title") ?: ""
+            val description = backStackEntry.arguments?.getString("description") ?: ""
+
+            TaskDetailsScreen(
+                navController = navController,
+                title = title,
+                description = description
+            )
         }
     }
 }

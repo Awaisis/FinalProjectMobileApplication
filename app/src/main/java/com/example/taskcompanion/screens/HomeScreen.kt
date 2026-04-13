@@ -22,7 +22,7 @@ fun HomeScreen(navController: NavController) {
     val tasks = listOf(
         Task("Buy groceries", "Milk, Eggs, Bread"),
         Task("Finish assignment", "Mobile app project"),
-        Task("Workout", "Leg day at gym")
+        Task("Workout", "Chest day at gym")
     )
 
     Scaffold(
@@ -47,7 +47,7 @@ fun HomeScreen(navController: NavController) {
         ) {
 
             items(tasks) { task ->
-                TaskCard(task)
+                TaskCard(task, navController)
                 Spacer(modifier = Modifier.height(10.dp))
             }
         }
@@ -55,15 +55,23 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun TaskCard(task: Task) {
+fun TaskCard(
+    task: Task,
+    navController: NavController
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(4.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        onClick = {
+            navController.navigate("details/${task.title}/${task.description}")
+        }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = task.title, style = MaterialTheme.typography.titleMedium)
+            Text(task.title, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = task.description, style = MaterialTheme.typography.bodyMedium)
+            Text(task.description, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
