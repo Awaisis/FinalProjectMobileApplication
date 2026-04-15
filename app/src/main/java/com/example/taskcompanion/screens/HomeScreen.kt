@@ -21,7 +21,7 @@ data class Task(
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: TaskViewModel = viewModel()
+    viewModel: TaskViewModel
 ) {
 
 

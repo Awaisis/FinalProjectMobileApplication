@@ -10,7 +10,10 @@ import androidx.navigation.NavController
 // I used AI to assist me in creating the AddEditTaskScreen composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEditTaskScreen(navController: NavController) {
+fun AddEditTaskScreen(
+    navController: NavController,
+    viewModel: com.example.taskcompanion.viewmodel.TaskViewModel
+) {
 
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -48,7 +51,14 @@ fun AddEditTaskScreen(navController: NavController) {
             Button(
                 onClick = {
 
-                    navController.popBackStack()
+                    if (title.isNotBlank() && description.isNotBlank()) {
+
+                        viewModel.addTask(
+                            Task(title, description)
+                        )
+
+                        navController.popBackStack()
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

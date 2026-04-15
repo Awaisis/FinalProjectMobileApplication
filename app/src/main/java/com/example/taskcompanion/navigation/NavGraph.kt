@@ -7,11 +7,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.taskcompanion.screens.HomeScreen
 import com.example.taskcompanion.screens.AddEditTaskScreen
 import com.example.taskcompanion.screens.TaskDetailsScreen
-
 @Composable
 fun NavGraph() {
 
     val navController = rememberNavController()
+
+    val viewModel: com.example.taskcompanion.viewmodel.TaskViewModel =
+        androidx.lifecycle.viewmodel.compose.viewModel()
 
     NavHost(
         navController = navController,
@@ -19,11 +21,11 @@ fun NavGraph() {
     ) {
 
         composable("home") {
-            HomeScreen(navController)
+            HomeScreen(navController, viewModel)
         }
 
         composable("add_edit") {
-            AddEditTaskScreen(navController)
+            AddEditTaskScreen(navController, viewModel)
         }
 
         composable("details/{title}/{description}") { backStackEntry ->
