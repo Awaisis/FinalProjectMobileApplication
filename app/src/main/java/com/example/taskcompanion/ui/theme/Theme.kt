@@ -1,54 +1,73 @@
 package com.example.taskcompanion.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+//   Custom App Color Palette:
+// Soft teal primary
+val TealPrimary = Color(0xFF00897B)
+val TealPrimaryContainer = Color(0xFFB2DFDB)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+// Deep green secondary
+val GreenSecondary = Color(0xFF2E7D32)
+
+// Warm grey background
+val BackgroundLight = Color(0xFFFAFAFA)
+
+// Text colors
+val TextPrimary = Color(0xFF1A1A1A)
+val TextSecondary = Color(0xFF4A4A4A)
+
+
+//   Light Color Scheme:
+private val LightColors = lightColorScheme(
+    primary = TealPrimary,
     onPrimary = Color.White,
+    primaryContainer = TealPrimaryContainer,
+    onPrimaryContainer = TextPrimary,
+
+    secondary = GreenSecondary,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+
+    background = BackgroundLight,
+    onBackground = TextPrimary,
+
+    surface = Color.White,
+    onSurface = TextPrimary
 )
 
+
+//   Dark Color Scheme:
+private val DarkColors = darkColorScheme(
+    primary = TealPrimary,
+    onPrimary = Color.Black,
+    primaryContainer = TealPrimaryContainer,
+    onPrimaryContainer = Color.Black,
+
+    secondary = GreenSecondary,
+    onSecondary = Color.Black,
+
+    background = Color(0xFF121212),
+    onBackground = Color.White,
+
+    surface = Color(0xFF1E1E1E),
+    onSurface = Color.White
+)
+
+
+//   App Theme Wrapper:
 @Composable
 fun TaskCompanionTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme: ColorScheme =
+        if (darkTheme) DarkColors else LightColors
 
     MaterialTheme(
         colorScheme = colorScheme,
