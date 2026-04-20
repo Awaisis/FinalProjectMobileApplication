@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.taskcompanion.data.Task
 import com.example.taskcompanion.viewmodel.TaskViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
