@@ -6,22 +6,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.taskcompanion.viewmodel.TaskViewModel
 
-// I used AI to assist me in creating the AddEditTaskScreen composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditTaskScreen(
     navController: NavController,
-    viewModel: com.example.taskcompanion.viewmodel.TaskViewModel
+    viewModel: TaskViewModel
 ) {
-
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add Task") }
+                title = { Text("Add a New Task") }
             )
         }
     ) { padding ->
@@ -50,13 +49,8 @@ fun AddEditTaskScreen(
 
             Button(
                 onClick = {
-
                     if (title.isNotBlank() && description.isNotBlank()) {
-
-                        viewModel.addTask(
-                            Task(title, description)
-                        )
-
+                        viewModel.addTask(Task(title, description))
                         navController.popBackStack()
                     }
                 },
