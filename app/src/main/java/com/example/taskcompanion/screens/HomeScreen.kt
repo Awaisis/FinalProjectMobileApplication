@@ -8,14 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.taskcompanion.viewmodel.TaskViewModel
-
-// Fake data for now (we will replace with database later)
-data class Task(
-    val title: String,
-    val description: String
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,8 +16,6 @@ fun HomeScreen(
     navController: NavController,
     viewModel: TaskViewModel
 ) {
-
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,7 +36,6 @@ fun HomeScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-
             items(viewModel.tasks) { task ->
                 TaskCard(task, navController)
                 Spacer(modifier = Modifier.height(10.dp))
