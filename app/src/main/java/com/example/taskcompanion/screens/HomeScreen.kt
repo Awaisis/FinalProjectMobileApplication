@@ -19,12 +19,18 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("TaskCompanion") }
+                title = { Text("TaskCompanion") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("add_edit") }
+                onClick = { navController.navigate("add_edit") },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 Text("+")
             }
@@ -53,6 +59,9 @@ fun TaskCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(4.dp),
         onClick = {
             navController.navigate("details/${task.title}/${task.description}")
