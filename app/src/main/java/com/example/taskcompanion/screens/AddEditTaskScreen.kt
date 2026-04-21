@@ -13,15 +13,26 @@ import com.example.taskcompanion.viewmodel.TaskViewModel
 @Composable
 fun AddEditTaskScreen(
     navController: NavController,
-    viewModel: TaskViewModel
+    viewModel: TaskViewModel,
+    taskIndex: Int? = null
 ) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    // 🔹 If editing, get existing task
+    val existingTask = taskIndex?.let { viewModel.tasks[it] }
+
+    // 🔹 Form states
+    var title by remember { mutableStateOf(existingTask?.title ?: "") }
+    var description by remember { mutableStateOf(existingTask?.description ?: "") }
+    var dueDate by remember { mutableStateOf(existingTask?.dueDate ?: "") }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add a New Task") },
+                title = {
+                    Text(
+                        if (taskIndex == null) "Add Task"
+                        else "Edit Task"
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -38,6 +49,7 @@ fun AddEditTaskScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
+            // 🔹 Title
             TextField(
                 value = title,
                 onValueChange = { title = it },
@@ -49,6 +61,7 @@ fun AddEditTaskScreen(
                 )
             )
 
+            // 🔹 Description
             TextField(
                 value = description,
                 onValueChange = { description = it },
@@ -60,20 +73,63 @@ fun AddEditTaskScreen(
                 )
             )
 
+            // 🔹 Due Date
+            TextField(
+                value = dueDate,
+                onValueChange = { dueDate = it },
+                label = { Text("Due Date (YYYY-MM-DD)") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Save Button
             Button(
                 onClick = {
-                    if (title.isNotBlank() && description.isNotBlank()) {
-                        viewModel.addTask(Task(title, description))
+                    if (title.isNotBlank() &&
+                        description.isNotBlank() &&
+                        dueDate.isNotBlank()
+                    ) {
+
+                        if (taskIndex == null) {
+                            // ➕ Add new task
+                            viewModel.addTask(
+                                Task(title, description, dueDate)
+                            )
+                        } else {
+                            // ✏️ Edit existing task
+                            val updatedTask = Task(
+                                title,
+                                description,
+                                dueDate,
+                                existingTask?.isCompleted ?: false
+                            )
+                            viewModel.tasks[taskIndex] = updatedTask
+                        }
+
                         navController.popBackStack()
                     }
                 },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(if (taskIndex == null) "Save Task" else "Update Task")
+            }
+
+            // Cancel Button
+            Button(
+                onClick = {
+                    navController.popBackStack()
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = MaterialTheme.colorScheme.secondary
                 )
             ) {
-                Text("Save Task")
+                Text("Cancel")
             }
         }
     }

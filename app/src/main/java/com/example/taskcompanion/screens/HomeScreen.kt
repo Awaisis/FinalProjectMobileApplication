@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.taskcompanion.data.Task
 import com.example.taskcompanion.viewmodel.TaskViewModel
+import androidx.compose.foundation.lazy.itemsIndexed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,9 +44,8 @@ fun HomeScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            items(viewModel.tasks) { task ->
-                TaskCard(task, navController)
-                Spacer(modifier = Modifier.height(10.dp))
+            itemsIndexed(viewModel.tasks) { index, task ->
+                TaskCard(task, navController, viewModel, index)
             }
         }
     }
@@ -54,7 +54,9 @@ fun HomeScreen(
 @Composable
 fun TaskCard(
     task: Task,
-    navController: NavController
+    navController: NavController,
+    viewModel: TaskViewModel,
+    index: Int
 ) {
     Card(
         modifier = Modifier
@@ -65,13 +67,54 @@ fun TaskCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp),
         onClick = {
-            navController.navigate("details/${task.title}/${task.description}")
+            navController.navigate("details/$index")
         }
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(task.title, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(task.description, style = MaterialTheme.typography.bodyMedium)
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Column(modifier = Modifier.weight(1f)) {
+
+                Text(
+                    text = task.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (task.isCompleted)
+                        MaterialTheme.colorScheme.secondary
+                    else MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = task.description,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = "Due: ${task.dueDate}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Column {
+
+                Checkbox(
+                    checked = task.isCompleted,
+                    onCheckedChange = {
+                        viewModel.toggleTaskCompletion(task)
+                    }
+                )
+
+                IconButton(onClick = {
+                    viewModel.deleteTask(task)
+                }) {
+                    Text("Delete")
+                }
+            }
         }
     }
 }

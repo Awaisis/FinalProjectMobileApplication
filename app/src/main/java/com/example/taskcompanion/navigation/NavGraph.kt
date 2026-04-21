@@ -28,16 +28,22 @@ fun NavGraph() {
             AddEditTaskScreen(navController, viewModel)
         }
 
-        composable("details/{title}/{description}") { backStackEntry ->
+        composable("details/{index}") { backStackEntry ->
 
-            val title = backStackEntry.arguments?.getString("title") ?: ""
-            val description = backStackEntry.arguments?.getString("description") ?: ""
+            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
 
             TaskDetailsScreen(
                 navController = navController,
-                title = title,
-                description = description
+                viewModel = viewModel,
+                taskIndex = index
             )
+        }
+
+        composable("add_edit/{index}") { backStackEntry ->
+
+            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull()
+
+            AddEditTaskScreen(navController, viewModel, index)
         }
     }
 }
