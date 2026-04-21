@@ -1,49 +1,40 @@
 package com.example.taskcompanion.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.taskcompanion.screens.HomeScreen
-import com.example.taskcompanion.screens.AddEditTaskScreen
-import com.example.taskcompanion.screens.TaskDetailsScreen
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.*
+import com.example.taskcompanion.data.*
+import com.example.taskcompanion.screens.*
+import com.example.taskcompanion.viewmodel.*
+
 @Composable
 fun NavGraph() {
 
     val navController = rememberNavController()
 
-    val viewModel: com.example.taskcompanion.viewmodel.TaskViewModel =
-        androidx.lifecycle.viewmodel.compose.viewModel()
+    val context = LocalContext.current
+    val database = TaskDatabase.getDatabase(context)
+    val repository = OfflineTaskRepository(database.taskDao())
 
-    NavHost(
-        navController = navController,
-        startDestination = "home"
-    ) {
+    val viewModel: TaskViewModel = viewModel(
+        factory = TaskViewModelFactory(repository)
+    )
+
+    NavHost(navController, startDestination = "home") {
 
         composable("home") {
             HomeScreen(navController, viewModel)
         }
 
-        composable("add_edit") {
-            AddEditTaskScreen(navController, viewModel)
+        composable("add_edit/{taskId?}") { backStackEntry ->
+            val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull()
+            AddEditTaskScreen(navController, viewModel, taskId)
         }
 
-        composable("details/{index}") { backStackEntry ->
-
-            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
-
-            TaskDetailsScreen(
-                navController = navController,
-                viewModel = viewModel,
-                taskIndex = index
-            )
-        }
-
-        composable("add_edit/{index}") { backStackEntry ->
-
-            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull()
-
-            AddEditTaskScreen(navController, viewModel, index)
+        composable("details/{taskId}") { backStackEntry ->
+            val taskId = backStackEntry.arguments?.getString("taskId")?.toInt() ?: 0
+            TaskDetailsScreen(navController, viewModel, taskId)
         }
     }
 }
