@@ -21,9 +21,27 @@ fun AddEditTaskScreen(
     var description by remember { mutableStateOf("") }
     var dueDate by remember { mutableStateOf("") }
 
+    val isEdit = taskId != null && taskId != 0
+
+    if (isEdit) {
+        val task = viewModel.getTaskById(taskId!!)
+
+        LaunchedEffect(task) {
+            task?.let {
+                title = it.title
+                description = it.description
+                dueDate = it.dueDate
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Add / Edit Task") })
+            TopAppBar(
+                title = {
+                    Text(if (isEdit) "Edit Task" else "Add Task")
+                }
+            )
         }
     ) { padding ->
 
@@ -57,26 +75,38 @@ fun AddEditTaskScreen(
             )
 
             Button(
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    val task = Task(
-                        title = title,
-                        description = description,
-                        dueDate = dueDate
-                    )
 
-                    viewModel.addTask(task)
+                    if (isEdit) {
+                        viewModel.addTask(
+                            Task(
+                                id = taskId!!,
+                                title = title,
+                                description = description,
+                                dueDate = dueDate
+                            )
+                        )
+                    } else {
+                        viewModel.addTask(
+                            Task(
+                                id = 0,
+                                title = title,
+                                description = description,
+                                dueDate = dueDate
+                            )
+                        )
+                    }
+
                     navController.popBackStack()
-                },
-                modifier = Modifier.fillMaxWidth()
+                }
             ) {
                 Text("Save")
             }
 
             Button(
-                onClick = {
-                    navController.popBackStack()
-                },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.popBackStack() }
             ) {
                 Text("Cancel")
             }
